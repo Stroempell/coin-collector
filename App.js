@@ -29,6 +29,17 @@ export default function App() {
           headerShown: false,
           tabBarActiveTintColor: 'gold',
           tabBarInactiveTintColor: 'grey',
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === 'Home') {
+              iconName = 'home';
+            } else if (route.name === 'Coins') {
+              iconName = 'logo-euro';
+            }
+
+            return <Ionicons name={iconName} size={size} color={color} />;   //it returns an icon component
+          },
         })}
         >
           <Tab.Screen name="Home" component={HomePage}/>

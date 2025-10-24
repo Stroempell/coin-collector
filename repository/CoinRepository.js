@@ -76,14 +76,16 @@ populateDB: async () => {
   try {
     const statement = await db.prepareAsync(
       `INSERT INTO coins (id, name, country, year, url, amount) 
-      VALUES ($id, $name, $country, $year, $url, 0) 
+      VALUES ($id, $name, $country, $year, $url, 0)
       ON CONFLICT(id) DO UPDATE SET
         name=excluded.name,
         country=excluded.country,
         year=excluded.year,
         url=excluded.url
       `
-    );
+    ); //prevents sql injections - https://docs.expo.dev/versions/latest/sdk/sqlite/#prepared-statements
+        // on conflict is for already existing entities in local database - name, country etc. can be updated but not amount
+
 
     for (const coin of data) {
       console.log("Saving started for", coin.name);
@@ -97,7 +99,7 @@ populateDB: async () => {
     }
 
     await statement.finalizeAsync();
-    await db.execAsync("COMMIT");
+    await db.execAsync("COMMIT"); // necessary because otherwise big problems
     console.log("All coins inserted in single transaction");
   } catch (err) {
     await db.execAsync("ROLLBACK");
@@ -105,53 +107,12 @@ populateDB: async () => {
   }
 },
 
-
-
-
-
-
-
-
-    addCoin: async (coin) => {
-        const statement = await db.prepareAsync(
-            'INSERT INTO coins (id, name, country, year, condition, amount, url) VALUES ($id, $name, $country, $year, $condition, $amount, $url)'
-        ) //prevents sql injections - https://docs.expo.dev/versions/latest/sdk/sqlite/#prepared-statements
-
-        try {
-            console.log("Saving started")
-            await statement.executeAsync({
-                $id: coin.id,
-                $name: coin.name,
-                $country: coin.country, 
-                $year: coin.year,
-                $condition: coin.condition || null,
-                $amount: coin.amount || 0,
-                $url: coin.url,
-            })
-
-        } finally {
-            await statement.finalizeAsync();
-
-        }
-    },
-
     getAllCoins: async () => {
         return await db.getAllAsync('SELECT * from coins');
     },
 
-    getCoinById: async (id) => {
-        const statement = await db.prepareAsync('SELECT * FROM coins WHERE ID=$id')
-
-        try {
-            let result = await statement.executeAsync({
-                $id: coin.id,
-            })
-        } finally {
-            await statement.finalizeAsync();
-        }
-    },
-
     updateCoin: async (coin) => {
+        console.log("Updating coin")
         const statement = await db.prepareAsync(
             'UPDATE coins SET condition=$condition, amount=$amount WHERE id=$id'
         )
@@ -166,15 +127,6 @@ populateDB: async () => {
             await statement.finalizeAsync();
         }
     },
-
-    deleteCoinById: async (id) => {
-        const statement = await db.prepareAsync('DELETE FROM coins WHERE id=$id');
-        try {
-            await statement.executeAsync({ $id: id });
-        } finally {
-            await statement.finalizeAsync();
-        }
-    }
 
 
 }

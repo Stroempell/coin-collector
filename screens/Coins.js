@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, FlatList, View, Image, Pressable } from "react-native";
 import { Text, Button } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { CoinRepository, initializeDB } from "../repository/CoinRepository";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -40,18 +40,13 @@ export default function Coins({ navigation }) {
     getOwnedCoins();
   }
 
+  const insets = useSafeAreaInsets();
+
 
   return (
-    <SafeAreaView>
-      <Text variant="displayMedium">My Coins</Text>
+    <SafeAreaView style={[styles.container]} edges={['top']}>
+      <Text variant="displayMedium" style={styles.title}>My Coins</Text>
       <View style={styles.row}>
-              <Button 
-        onPress={() => navigation.navigate('AddCoinScreen')}
-        mode='contained'
-        style={styles.button}
-      >
-        Add Coin
-      </Button>
       <Button 
         onPress={handleRefresh}
         mode='contained'
@@ -114,9 +109,13 @@ export default function Coins({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    alignContent: 'center',
+    justifyContent: 'center',
   },
-    card: {
+  title: {
+    textAlign: 'center'
+  },
+  card: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
