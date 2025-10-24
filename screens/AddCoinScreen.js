@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet } from "react-native";
+import { Image, StyleSheet } from "react-native";
 import { TextInput, Text, Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CoinRepository } from "../repository/CoinRepository";
@@ -30,6 +30,12 @@ export default function AddCoinScreen({ navigation, route }) {
   return (
     <SafeAreaView style={styles.container}>
       <Text variant="headlineMedium">Add a New Coin</Text>
+
+      <Image
+        source={{ uri: newCoin.url }} 
+        resizeMode="contain"
+        style={styles.image}
+      />
 
       <TextInput 
         label="Coin Name"
@@ -71,13 +77,6 @@ export default function AddCoinScreen({ navigation, route }) {
         keyboardType="numeric"
       />
 
-      <TextInput 
-        label="Url"
-        value={newCoin.url}
-        onChangeText={(text) => setNewCoin({ ...newCoin, url: text})}
-        style={styles.textInputs}
-      />
-
       <Button
         mode='contained'
         label="Save"
@@ -101,5 +100,10 @@ const styles = StyleSheet.create({
   textInputs: {
     width: 250,
     marginVertical: 8,
-  }
+  },
+    image: {
+    width: "150",
+    height: "150",
+    borderRadius: 75,
+  },
 });

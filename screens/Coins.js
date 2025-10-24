@@ -10,22 +10,24 @@ export default function Coins({ navigation }) {
   const [allCoins, setAllCoins] = useState([])
 
     const getOwnedCoins = async () => {
+              console.log("local coins are refreshing");
+
       const data = await CoinRepository.getAllCoins();
       if (data) {
         setAllCoins(data);
-        console.log("local database: ", allCoins)
+        console.log("local database: ", data)
       }
     }
 
-
+    //always on rerender
   useFocusEffect(useCallback(() => {
     getOwnedCoins();
   }, []))
 
 
-  const handleFetch = async () => {
+  const handleRefresh = async () => {
     await CoinRepository.populateDB();
-    await getOwnedCoins();
+    await getOwnedCoins();    
   }
 
   const handleReset = () => {
@@ -51,7 +53,7 @@ export default function Coins({ navigation }) {
         Add Coin
       </Button>
       <Button 
-        onPress={handleFetch}
+        onPress={handleRefresh}
         mode='contained'
         style={styles.button}
 

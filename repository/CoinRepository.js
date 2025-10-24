@@ -66,37 +66,59 @@ export const CoinRepository = {
         },
 
 
-    populateDB: async () => {
-    const response = await fetch(`http://192.168.101.104:8080/api/coins`);
-    if (!response.ok) throw new Error("Failed to fetch coins");
-    const data = await response.json();
+populateDB: async () => {
+  const response = await fetch(`http://192.168.101.104:8080/api/coins`);
+  if (!response.ok) throw new Error("Failed to fetch coins");
+  const data = await response.json();
 
-    // Wait for all coins to be inserted - otherwise no dynamic update
-    await Promise.all(data.map(coin => CoinRepository.addCoin({
-        id: coin.id,
-        name: coin.name,
-        country: coin.country,
-        year: coin.year,
-        condition: coin.condition || null,
-        amount: coin.amount || 0,
-        url: coin.url || null,
-    })));
-    },
+  // begin transaction
+  await db.execAsync("BEGIN TRANSACTION");
+  try {
+    const statement = await db.prepareAsync(
+      `INSERT INTO coins (id, name, country, year, url, amount) 
+      VALUES ($id, $name, $country, $year, $url, 0) 
+      ON CONFLICT(id) DO UPDATE SET
+        name=excluded.name,
+        country=excluded.country,
+        year=excluded.year,
+        url=excluded.url
+      `
+    );
+
+    for (const coin of data) {
+      console.log("Saving started for", coin.name);
+      await statement.executeAsync({
+        $id: coin.id,
+        $name: coin.name,
+        $country: coin.country,
+        $year: coin.year,
+        $url: coin.url || null,
+      });
+    }
+
+    await statement.finalizeAsync();
+    await db.execAsync("COMMIT");
+    console.log("All coins inserted in single transaction");
+  } catch (err) {
+    await db.execAsync("ROLLBACK");
+    console.error("Insert failed:", err);
+  }
+},
+
+
+
 
 
 
 
 
     addCoin: async (coin) => {
-        console.log("saving stared")
         const statement = await db.prepareAsync(
             'INSERT INTO coins (id, name, country, year, condition, amount, url) VALUES ($id, $name, $country, $year, $condition, $amount, $url)'
         ) //prevents sql injections - https://docs.expo.dev/versions/latest/sdk/sqlite/#prepared-statements
 
-        console.log("saving continued")
-
         try {
-            console.log("saving with vars")
+            console.log("Saving started")
             await statement.executeAsync({
                 $id: coin.id,
                 $name: coin.name,
