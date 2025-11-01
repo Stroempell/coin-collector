@@ -1,0 +1,130 @@
+import { useCallback, useState } from "react";
+import { StyleSheet, FlatList, View, Image, Pressable } from "react-native";
+import { Text, Button } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { CoinRepository } from "../../repository/CoinRepository";
+import { useFocusEffect } from "@react-navigation/native";
+
+export default function Countries({ navigation }) {
+  const [allCountries, setAllCountries] = useState([]);
+
+  const getData = async () => {
+    const coinAmounts = await CoinRepository.getCoinAmount();
+    const countries = await CoinRepository.getAllCountries();
+
+    let ownedCoins = 0;
+    let maxCoins = 0;
+
+    if (coinAmounts) {
+      ownedCoins = coinAmounts[0].allOwnedCoins;
+      maxCoins = coinAmounts[0].allMaxCoins;
+    }
+    console.log("countries are refreshing");
+
+    if (countries) {
+      setAllCountries([
+        {
+          id: 0,
+          name: "EU (All)",
+          owned_coins: ownedCoins,
+          max_coins: maxCoins,
+          url: "https://flagpedia.net/data/org/w1160/eu.webp",
+        },
+        ...countries,
+      ]);
+      console.log("local database: ", countries);
+    }
+  };
+
+  //always on rerender
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, [])
+  );
+
+  const handleRefresh = async () => {
+    await CoinRepository.populateDB();
+    await getData();
+  };
+
+  const handleCheck = () => {
+    CoinRepository.checkDB();
+    getData();
+  };
+
+  return (
+    <SafeAreaView style={[styles.container]} edges={["top"]}>
+      <View style={styles.row}>
+        <Button onPress={handleRefresh} mode="contained" style={styles.button}>
+          Refresh
+        </Button>
+      </View>
+      <View style={styles.row}>
+        <Button onPress={handleCheck} mode="contained" style={styles.button}>
+          Check db
+        </Button>
+      </View>
+
+      <FlatList
+        data={allCountries}
+        renderItem={({ item }) => (
+          <Pressable
+            onPress={() => navigation.navigate("Coins", { country: item.name })}
+            style={styles.card}
+          >
+            <View style={styles.cardHeader}>
+              <Text variant="titleSmall" style={styles.title}>
+                {item.name}: {item.owned_coins}/{item.max_coins}
+              </Text>
+            </View>
+            <Image
+              source={{ uri: item.url }}
+              resizeMode="stretch"
+              style={item.owned_coins === 0 ? styles.lockedImage : styles.image}
+            />
+          </Pressable>
+        )}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={2}
+      />
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignContent: "center",
+    justifyContent: "center",
+  },
+  title: {
+    textAlign: "center",
+  },
+  card: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 7,
+    marginVertical: 20,
+    borderRadius: 20,
+  },
+  image: {
+    width: 150,
+    height: 120,
+    borderRadius: 150,
+  },
+  lockedImage: {
+    width: 150,
+    height: 120,
+    borderRadius: 75,
+    opacity: 0.3,
+  },
+  button: {
+    width: 150,
+    margin: 5,
+  },
+  row: {
+    flexDirection: "row",
+  },
+});

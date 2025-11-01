@@ -3,10 +3,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomePage from './screens/HomePage';
-import Coins from './screens/Coins';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import CoinStack from './screens/CoinStack';
+import CountryStack from './screens/Countries/CountryStack'
 import { useEffect } from 'react';
 import { CoinRepository, initializeDB } from './repository/CoinRepository';
 
@@ -36,6 +35,8 @@ export default function App() {
               iconName = 'home';
             } else if (route.name === 'Coins') {
               iconName = 'logo-euro';
+            } else if (route.name === 'Countries') {
+              iconName = 'earth-outline';
             }
 
             return <Ionicons name={iconName} size={size} color={color} />;   //it returns an icon component
@@ -43,7 +44,7 @@ export default function App() {
         })}
         >
           <Tab.Screen name="Home" component={HomePage}/>
-          <Tab.Screen name="Coins" component={CoinStack}/>
+          <Tab.Screen name="Countries" component={CountryStack}/>          
         </Tab.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

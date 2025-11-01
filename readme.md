@@ -7,9 +7,18 @@ Users can do the following, and navigate to those pages with a bottom tab bar:
 ### Home screen
 Nothing yet
 
-### Coins screen
-- View all coins available from the API. On the front page, the country, name, year and image is visible. Underneath, the amount of coins you own is visible.
-- Click on a coin to see more information. Also, edit the quality of your owned coin. (Is it in a bad state, exceptional,...). You can also add and remove how many coins of this type you own. 
+### ~~Coins~~ Countries screen
+- **View all countries (incl. EU) and see how many coins you have per country.**
+- **View coins from a specific country (or all, if clicked on EU)**
+  - See year, ~~name~~, country, picture and amount per coin
+  - **Go back with the device back button, or with the header**
+- Click on a coin to see more information. 
+  - Edit the quality of your owned coin. (Is it in a bad state, exceptional,...). 
+  - You can also add and remove how many coins of this type you own. 
+  - You can save or cancel changes
+  - **Added textbox for full name - was cut off before**
+  - **Page is now scrollable**
+  - **Go back with the device back button, or with the header** (or cancel)
 - All coins that you don't own, are grayed out. If you own at least one coin of a specific type, they get colored in.  
   
 -- Temporary --  
@@ -18,13 +27,19 @@ Nothing yet
 - Check database (outputs SQLite database to console)
 
 ### Video showcase
-[Video version 0.1](./demo/v01.mp4)
+[Video version 0.1 - download if on github](./demo/v01.mp4)
+[Video version 0.2 - download if on github](./demo/v02.mp4)
 
 ## Upcoming features
-- See coins per year / country
-- Sort coins per year / country
-- Overview of how many coins you own out of all types
-- 
+- ~~See coins per country~~ -> implemented  
+  - ~~make api get all countries~~   
+  - ~~update populatedb in coinrepo~~  
+- Sort coins per year  
+- ~~Overview of how many coins you own out of all types~~ -> implemented  
+- Offline functionality: cache images - library: react-native-fast-image  
+- "Favorite" coins - similar to wishlist 
+- Search for coins/countries
+- Picture of your coin
 
 ## Technologies used
 - React
