@@ -19,8 +19,7 @@ Nothing yet
   - Edit the quality of your owned coin. (Is it in a bad state, exceptional,...). 
   - You can also add and remove how many coins of this type you own. 
   - You can save or cancel changes
-  - Added textbox for full name - was cut off before
-  - Page is now scrollable
+  - **You can make the image bigger when you press on it.** (implemented in v0.3.1)
   - Go back with the device back button, or with the header (or cancel)
 - All coins that you don't own, are grayed out. If you own at least one coin of a specific type, they get colored in.  
   

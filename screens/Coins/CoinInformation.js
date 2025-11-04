@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Image, ScrollView, StyleSheet, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import {
   TextInput,
   Text,
@@ -24,6 +24,8 @@ export default function CoinInformation({ navigation, route }) {
     url: existingCoin?.url || "",
   });
 
+  const [bigger, setBigger] = useState();
+
   const HandleSave = async () => {
     if (newCoin.id) {
       await CoinRepository.updateCoin(newCoin);
@@ -36,24 +38,25 @@ export default function CoinInformation({ navigation, route }) {
     navigation.goBack();
   };
 
-  const [visible, setVisible] = useState(false);
-
-  const openMenu = () => setVisible(true);
-
-  const closeMenu = () => setVisible(false);
 
   return (
-    <SafeAreaView style={styles.container} edges={'top'}>
+    <SafeAreaView style={styles.container} edges={"top"}>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         style={{ width: "100%" }} //otherwise scroll bar is in the center
       >
         <PaperProvider style={styles.container}>
-          <Image
-            source={{ uri: newCoin.url }}
-            resizeMode="contain"
-            style={[styles.image, styles.contentCenter]}
-          />
+          <Pressable
+            onPress={() => {
+              setBigger(!bigger); //inverse of what it was
+            }}
+          >
+            <Image
+              source={{ uri: newCoin.url }}
+              resizeMode="contain"
+              style={[styles.image, styles.contentCenter, bigger && styles.imagePressed]}
+            />
+          </Pressable>
 
           <TextInput
             label="Coin Name"
@@ -207,6 +210,10 @@ const styles = StyleSheet.create({
   image: {
     height: 150,
     borderRadius: 75,
+  },
+  imagePressed: {
+    height: 350,
+    borderRadius: 175,
   },
   button: {
     marginVertical: 5,
