@@ -165,13 +165,34 @@ export const CoinRepository = {
     }
   },
 
-  getAllCoins: async () => {
+  getAllCoins: async (sorting, years) => {
+    //  console.log("Sorting: ", sorting)
+    //  console.log("Years: ", years)
+
+    // Validate the input to avoid injection
+    const direction = sorting === "DESC" ? "DESC" : "ASC";
+
     // returns coins joined with countries to show country name
-    return await db.getAllAsync(`
-      SELECT coins.id, coins.name, coins.year, coins.url, coins.amount, coins.condition, countries.name as country_name 
-      FROM coins 
-      JOIN countries ON coins.country_id = countries.id
-    `);
+    // can't directly use parameters in query, so have to build it dynamically
+    let query = `
+    SELECT coins.id, coins.name, coins.year, coins.url, coins.amount, coins.condition, countries.name as country_name
+    FROM coins
+    JOIN countries ON coins.country_id = countries.id
+  `;
+
+    // if years are specified, search for specific years
+    if (years && years.length > 0) {
+      const placeholders = years.map(() => "?").join(", "); // otherwise maybe sql injection
+      query += ` WHERE coins.year IN (${placeholders})`;
+    }
+
+    // always order by year in the chosen direction
+    query += ` ORDER BY coins.year ${direction}`;
+
+    // if no years are specified, params should be empty
+    const params = years && years.length > 0 ? years : [];
+
+    return await db.getAllAsync(query, params);
   },
 
   updateCoin: async (coin) => {
@@ -191,32 +212,77 @@ export const CoinRepository = {
     }
   },
 
-  getAllCountries: async () => {
-    return await db.getAllAsync(`
-        SELECT countries.*, count(case when coins.amount > 0 then 1 END) as owned_coins, count(coins.id) as max_coins
-        from countries
-        left join coins on countries.id = coins.country_id
-        group by countries.id
-        order by countries.name asc
-      `);
+  getAllCountries: async (searchQuery) => {
+  //  console.log("get all countries called with query: ", searchQuery);
+
+    // Start with base query
+    let query = `
+      SELECT countries.*, 
+             count(case when coins.amount > 0 then 1 END) as owned_coins, 
+             count(coins.id) as max_coins
+      FROM countries
+      LEFT JOIN coins ON countries.id = coins.country_id
+    `;
+
+    // if there is a search query, add filter
+    if (searchQuery && searchQuery.toString().trim().length > 0) {
+      query += ` WHERE LOWER(countries.name) LIKE LOWER(?)`;
+ //     console.log("WHERE statement added");
+    }
+
+    query += ` GROUP BY countries.id 
+               ORDER BY countries.name ASC`;
+
+    // if search query is provided, use it as parameter with wildcards
+    // wildcards can't be added in the upper part for some reason
+    const params =
+      (searchQuery && searchQuery.trim().length) > 0 ? [`%${searchQuery}%`] : [];
+
+    return await db.getAllAsync(query, params);
   },
 
-  getCoinsByCountry: async (countryName) => {
-    return await db.getAllAsync(
-      `
+  getCoinsByCountry: async (countryName, sorting, years) => {
+    // Validate the sorting input to prevent SQL injection
+    const direction = sorting === "DESC" ? "DESC" : "ASC";
+
+    // Start with base query
+    let query = `
     SELECT coins.id, coins.name, coins.year, coins.url, coins.amount, coins.condition, countries.name as country_name 
     FROM coins 
     JOIN countries ON coins.country_id = countries.id
-    WHERE countries.name=$country_name
-  `, //when using variables, it should also be sql-injection proof
-      { $country_name: countryName }
-    );
+    WHERE countries.name = ?
+  `;
+
+    // If years are specified, filter by them
+    if (years && years.length > 0) {
+      const placeholders = years.map(() => "?").join(", "); // prevent SQL injection
+      query += ` AND coins.year IN (${placeholders})`;
+    }
+
+    // Add sorting direction
+    query += ` ORDER BY coins.year ${direction}`;
+
+    // Parameters: first is country name, then years (if any)
+    const params =
+      years && years.length > 0 ? [countryName, ...years] : [countryName];
+
+    return await db.getAllAsync(query, params);
   },
 
   getCoinAmount: async () => {
     return await db.getAllAsync(`
       SELECT count(case when coins.amount > 0 then 1 END) as allOwnedCoins, count(coins.id) as allMaxCoins
       from coins
-      `)
+      `);
+  },
+
+  getAllYears: async () => {
+    let rows = await db.getAllAsync(`
+        SELECT DISTINCT year
+        from coins
+        ORDER BY year ASC
+      `);
+
+    return rows.map((row) => row.year);
   },
 };

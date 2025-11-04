@@ -1,16 +1,17 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, FlatList, View, Image, Pressable } from "react-native";
-import { Text, Button } from "react-native-paper";
+import { Text, Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CoinRepository } from "../../repository/CoinRepository";
 import { useFocusEffect } from "@react-navigation/native";
 
 export default function Countries({ navigation }) {
   const [allCountries, setAllCountries] = useState([]);
+  const [searchQuery, setSearchQuery] = useState();
 
   const getData = async () => {
     const coinAmounts = await CoinRepository.getCoinAmount();
-    const countries = await CoinRepository.getAllCountries();
+      const countries = await CoinRepository.getAllCountries(searchQuery);
 
     let ownedCoins = 0;
     let maxCoins = 0;
@@ -32,16 +33,22 @@ export default function Countries({ navigation }) {
         },
         ...countries,
       ]);
-      console.log("local database: ", countries);
+      //    console.log("local database: ", countries);
     }
   };
 
   //always on rerender
   useFocusEffect(
     useCallback(() => {
+      setSearchQuery("")
+      handleRefresh(); // TODO check to see if this works
       getData();
     }, [])
   );
+
+  useEffect(() => {
+    getData();
+  }, [searchQuery]);
 
   const handleRefresh = async () => {
     await CoinRepository.populateDB();
@@ -55,6 +62,7 @@ export default function Countries({ navigation }) {
 
   return (
     <SafeAreaView style={[styles.container]} edges={["top"]}>
+      {/*
       <View style={styles.row}>
         <Button onPress={handleRefresh} mode="contained" style={styles.button}>
           Refresh
@@ -65,6 +73,14 @@ export default function Countries({ navigation }) {
           Check db
         </Button>
       </View>
+      */}
+      <Text>Search for country</Text>
+      <TextInput
+        mode="outlined"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder="Belgium, Finland,..."
+      />
 
       <FlatList
         data={allCountries}
@@ -97,6 +113,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignContent: "center",
     justifyContent: "center",
+    margin: 10,
   },
   title: {
     textAlign: "center",
