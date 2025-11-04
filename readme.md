@@ -24,7 +24,7 @@ Nothing yet
   - Go back with the device back button, or with the header (or cancel)
 - All coins that you don't own, are grayed out. If you own at least one coin of a specific type, they get colored in.  
   
-~~-- Temporary --  ~~
+~~-- Temporary -- ~~
 - ~~Buttons that refresh the coins (read: refresh from the API. This also happens every time the screen is rendered.)~~
 - ~~Reset the database. To receive coins again from the API, click the "Refresh coins" button.~~
 - ~~Check database (outputs SQLite database to console)~~
