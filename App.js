@@ -1,13 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomePage from './screens/HomePage';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import CountryStack from './screens/Countries/CountryStack'
 import { useEffect } from 'react';
-import { CoinRepository, initializeDB } from './repository/CoinRepository';
+import { initializeDB } from './repository/CoinRepository';
+import NavigationStack from './screens/Countries/NavigationStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -44,7 +43,7 @@ export default function App() {
         })}
         >
           <Tab.Screen name="Home" component={HomePage}/>
-          <Tab.Screen name="Countries" component={CountryStack}/>          
+          <Tab.Screen name="Countries" component={NavigationStack}/>          
         </Tab.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

@@ -30,6 +30,7 @@ export const initializeDB = async () => {
         condition TEXT, 
         amount INTEGER, 
         url TEXT,
+        fetchUrl TEXT,
         FOREIGN KEY (country_id) REFERENCES countries(id) ON DELETE SET NULL ON UPDATE CASCADE
       )
     `);
@@ -47,7 +48,7 @@ export const CoinRepository = {
   */
 
   resetDB: async () => {
-    console.log("deleting db");
+    console.log("deleting from db");
     await db.execAsync("DELETE FROM coins");
     await db.execAsync("DELETE FROM countries");
 
@@ -128,13 +129,14 @@ export const CoinRepository = {
       // begin transaction for coins
       await db.execAsync("BEGIN TRANSACTION");
       const coinStmt = await db.prepareAsync(`
-        INSERT INTO coins (id, name, country_id, year, url, amount) 
-        VALUES ($id, $name, $country_id, $year, $url, 0)
+        INSERT INTO coins (id, name, country_id, year, url, fetchUrl, amount) 
+        VALUES ($id, $name, $country_id, $year, $url, $url, 0)
         ON CONFLICT(id) DO UPDATE SET
           name=excluded.name,
           country_id=excluded.country_id,
           year=excluded.year,
-          url=excluded.url
+          url=excluded.url,
+          fetchUrl=excluded.url
       `);
 
       for (const coin of coins) {
@@ -175,7 +177,7 @@ export const CoinRepository = {
     // returns coins joined with countries to show country name
     // can't directly use parameters in query, so have to build it dynamically
     let query = `
-    SELECT coins.id, coins.name, coins.year, coins.url, coins.amount, coins.condition, countries.name as country_name
+    SELECT coins.id, coins.name, coins.year, coins.url, coins.fetchUrl, coins.amount, coins.condition, countries.name as country_name
     FROM coins
     JOIN countries ON coins.country_id = countries.id
   `;
@@ -198,7 +200,7 @@ export const CoinRepository = {
   updateCoin: async (coin) => {
     console.log("Updating coin to following vars: ", coin);
     const statement = await db.prepareAsync(
-      "UPDATE coins SET condition=$condition, amount=$amount WHERE id=$id"
+      "UPDATE coins SET condition=$condition, amount=$amount, url=$url WHERE id=$id"
     );
 
     try {
@@ -206,14 +208,29 @@ export const CoinRepository = {
         $condition: coin.condition,
         $amount: coin.amount,
         $id: coin.id,
+        $url: coin.url,
       });
     } finally {
       await statement.finalizeAsync();
     }
   },
 
+  resetCoinUrl: async (coin) => {
+    const statement = await db.prepareAsync(
+      "UPDATE coins SET url=fetchUrl WHERE id=$id"
+    );
+    try {
+      await statement.executeAsync({
+        $id: coin.id,
+      });
+    } finally {
+      await statement.finalizeAsync();
+    }
+    console.log("url should be reset")
+  },
+
   getAllCountries: async (searchQuery) => {
-  //  console.log("get all countries called with query: ", searchQuery);
+    //  console.log("get all countries called with query: ", searchQuery);
 
     // Start with base query
     let query = `
@@ -227,7 +244,7 @@ export const CoinRepository = {
     // if there is a search query, add filter
     if (searchQuery && searchQuery.toString().trim().length > 0) {
       query += ` WHERE LOWER(countries.name) LIKE LOWER(?)`;
- //     console.log("WHERE statement added");
+      //     console.log("WHERE statement added");
     }
 
     query += ` GROUP BY countries.id 
@@ -236,7 +253,9 @@ export const CoinRepository = {
     // if search query is provided, use it as parameter with wildcards
     // wildcards can't be added in the upper part for some reason
     const params =
-      (searchQuery && searchQuery.trim().length) > 0 ? [`%${searchQuery}%`] : [];
+      (searchQuery && searchQuery.trim().length) > 0
+        ? [`%${searchQuery}%`]
+        : [];
 
     return await db.getAllAsync(query, params);
   },

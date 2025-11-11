@@ -26,7 +26,13 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "This app wants to access your pictures"
+        }
+      ]
     ]
   }
 }

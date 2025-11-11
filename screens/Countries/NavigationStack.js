@@ -6,7 +6,7 @@ import CoinInformation from "../Coins/CoinInformation";
 
 const Stack = createNativeStackNavigator();
 
-export default function CountryStack() {
+export default function NavigationStack() {
 
   return (
     <Stack.Navigator
@@ -16,7 +16,7 @@ export default function CountryStack() {
     >
         <Stack.Screen name="Countries" component={Countries} />
         <Stack.Screen name="Coins" component={Coins}/>
-        <Stack.Screen name="Coin information" component={CoinInformation} />        
+        <Stack.Screen name="Coin information" component={CoinInformation} />      
         
     </Stack.Navigator>
   );

@@ -42,7 +42,7 @@ export default function Coins({ navigation, route }) {
       id: year,
       name: year.toString(),
     }));
- //   console.log("All years: ", formatted);
+    //   console.log("All years: ", formatted);
     setAllYears(formatted);
   };
 
@@ -103,7 +103,7 @@ export default function Coins({ navigation, route }) {
           Check db
         </Button>
       </View>
-*/}
+      */}
 
       <FlatList
         data={allCoins}
