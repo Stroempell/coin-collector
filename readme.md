@@ -5,7 +5,7 @@ This project is specifically tailored for users that collect 2 euro coins.
 Users can do the following, and navigate to those pages with a bottom tab bar:
 
 ### Home screen
-Nothing yet
+- **Added statistics on the home page**
 
 ### Countries screen
 - View all countries (incl. EU) and see how many coins you have per country.
@@ -20,7 +20,7 @@ Nothing yet
   - You can also add and remove how many coins of this type you own. 
   - You can save or cancel changes
   - You can make the image bigger if you press on it (and smaller if you press again).
-  - You can add a custom picture for each coin (and reset it afterwards)
+  - **You can add a custom picture for each coin (and reset it afterwards)**
   - Go back with the device back button, or with the header (or cancel)
 - All coins that you don't own, are grayed out. If you own at least one coin of a specific type, they get colored in.  
 
@@ -29,12 +29,14 @@ Nothing yet
 - [Video version 0.1 - download if on github](./demo/v01.mp4)
 - [Video version 0.2 - download if on github](./demo/v02.mp4)
 - [Video version 0.3 - download if on github](./demo/v03.mp4)
+- [Video version 0.4 - download if on github](./demo/v04.mp4)
 
 
 ## Upcoming features
-- Offline functionality: cache images - library: react-native-fast-image
+- **Offline functionality: cache images - library: react-native-fast-image**
 - "Favorite" coins - similar to wishlist 
-- **Picture of your coin**
+- ~~Picture of your coin~~ -> implemented in v0.4
+- **Heatmap of countries**
 
 ## Technologies/libraries used
 - React

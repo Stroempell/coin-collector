@@ -11,7 +11,7 @@ export default function Countries({ navigation }) {
 
   const getData = async () => {
     const coinAmounts = await CoinRepository.getCoinAmount();
-      const countries = await CoinRepository.getAllCountries(searchQuery);
+    const countries = await CoinRepository.getAllCountries(searchQuery);
 
     let ownedCoins = 0;
     let maxCoins = 0;
@@ -40,7 +40,7 @@ export default function Countries({ navigation }) {
   //always on rerender
   useFocusEffect(
     useCallback(() => {
-      setSearchQuery("")
+      setSearchQuery("");
       handleRefresh(); // TODO check to see if this works
       getData();
     }, [])

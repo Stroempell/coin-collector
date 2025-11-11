@@ -140,7 +140,7 @@ export const CoinRepository = {
       `);
 
       for (const coin of coins) {
-        console.log("Saving started for", coin.name);
+        //    console.log("Saving started for", coin.name);
 
         // Find country_id based on country name from fetched country list
         const country = countries.find((c) => c.name === coin.country);
@@ -226,7 +226,7 @@ export const CoinRepository = {
     } finally {
       await statement.finalizeAsync();
     }
-    console.log("url should be reset")
+    console.log("url should be reset");
   },
 
   getAllCountries: async (searchQuery) => {
@@ -266,7 +266,7 @@ export const CoinRepository = {
 
     // Start with base query
     let query = `
-    SELECT coins.id, coins.name, coins.year, coins.url, coins.amount, coins.condition, countries.name as country_name 
+    SELECT coins.id, coins.name, coins.year, coins.url, coins.fetchUrl, coins.amount, coins.condition, countries.name as country_name 
     FROM coins 
     JOIN countries ON coins.country_id = countries.id
     WHERE countries.name = ?
@@ -292,6 +292,37 @@ export const CoinRepository = {
     return await db.getAllAsync(`
       SELECT count(case when coins.amount > 0 then 1 END) as allOwnedCoins, count(coins.id) as allMaxCoins
       from coins
+      `);
+  },
+
+  getCountryAmounts: async () => {
+    return await db.getAllAsync(`
+      SELECT count(distinct case when coins.amount > 0 then countries.id END) as allOwnedCountries, count(distinct countries.id) as allMaxCountries
+      from countries
+      left join coins on countries.id = coins.country_id
+      `);
+  },
+
+  getTopCountryAmounts: async () => {
+    return await db.getAllAsync(`
+      SELECT countries.name as name, count(distinct CASE when coins.amount > 0 then coins.id END) as ownedCoins
+      FROM countries
+      JOIN coins on countries.id = coins.country_id
+      GROUP BY countries.id
+      ORDER BY ownedCoins DESC
+      LIMIT 3
+      `);
+  },
+
+  getPercentageCountries: async () => {
+    return await db.getAllAsync(`
+      SELECT countries.name as name, 
+      COUNT(DISTINCT CASE WHEN coins.amount > 0 THEN coins.id END) * 1.0 / COUNT(coins.id) 
+        AS percentage
+      FROM countries
+      JOIN coins ON countries.id = coins.country_id
+      GROUP BY countries.id
+      ORDER BY percentage DESC;
       `);
   },
 

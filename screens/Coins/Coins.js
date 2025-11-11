@@ -108,16 +108,7 @@ export default function Coins({ navigation, route }) {
       <FlatList
         data={allCoins}
         ListHeaderComponent={
-          <View
-            style={{
-              width: "100%",
-              backgroundColor: "#dfd3e3",
-              borderRadius: 20,
-              padding: 15,
-              marginHorizontal: 10,
-              marginBottom: 10,
-            }}
-          >
+          <View style={styles.cellLayout}>
             {/* sorting part */}
             <View style={{ marginBottom: 20 }}>
               <Text style={{ fontWeight: "bold", marginBottom: 5 }}>
@@ -232,5 +223,13 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
+  },
+  cellLayout: {
+    width: "100%",
+    backgroundColor: "#dfd3e3",
+    borderRadius: 20,
+    padding: 15,
+    marginHorizontal: 10,
+    marginBottom: 10,
   },
 });
