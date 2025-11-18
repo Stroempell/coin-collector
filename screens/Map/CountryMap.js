@@ -1,13 +1,9 @@
 import { StyleSheet } from "react-native";
-import MapView, { UrlTile } from "react-native-maps";
-import { Text } from "react-native-paper";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import EuropeMap from "./EuropeMap";
-import SvgPanZoomimport, { SvgPanZoomElement } from "react-native-svg-pan-zoom";
 import SvgPanZoom from "react-native-svg-pan-zoom";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
-import { mapCountryNamesToCodes } from "../../utils/MapCountryNames";
 import { CoinRepository } from "../../repository/CoinRepository";
 
 export default function CountryMap() {

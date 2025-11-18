@@ -41,8 +41,6 @@ Users can do the following, and navigate to those pages with a bottom tab bar:
 ## Upcoming features
 - **Offline functionality: cache images - library: react-native-fast-image**
 - "Favorite" coins - similar to wishlist 
-- ~~Picture of your coin~~ -> implemented in v0.4
-- **Heatmap of countries**
 
 ## Technologies/libraries used
 - React
@@ -53,6 +51,8 @@ Users can do the following, and navigate to those pages with a bottom tab bar:
 - React native picker
 - React native element dropdown
 - Expo image picker
+- React native svg
+- React native svg pan zoom
 - SQLite
 - RESTful API (Back-end is made with java spring boot - see github repo below)
 

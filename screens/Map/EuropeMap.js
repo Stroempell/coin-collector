@@ -1,4 +1,3 @@
-import { useFocusEffect } from "@react-navigation/native";
 import { Svg, Path, Circle } from "react-native-svg";
 
 export default function EuropeMap({ countryPercentages = [] }) {
