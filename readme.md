@@ -5,7 +5,7 @@ This project is specifically tailored for users that collect 2 euro coins.
 Users can do the following, and navigate to those pages with a bottom tab bar:
 
 ### Home screen
-- **Added statistics on the home page**
+- Added statistics on the home page
 
 ### Countries screen
 - View all countries (incl. EU) and see how many coins you have per country.
@@ -20,9 +20,14 @@ Users can do the following, and navigate to those pages with a bottom tab bar:
   - You can also add and remove how many coins of this type you own. 
   - You can save or cancel changes
   - You can make the image bigger if you press on it (and smaller if you press again).
-  - **You can add a custom picture for each coin (and reset it afterwards)**
+  - You can add a custom picture for each coin (and reset it afterwards)
   - Go back with the device back button, or with the header (or cancel)
 - All coins that you don't own, are grayed out. If you own at least one coin of a specific type, they get colored in.  
+
+### Map screen
+- Added interactive map for all euro countries
+  - Countries with no coins are in gray
+  - Countries start at light blue and become more 
 
 
 ### Video showcase
@@ -30,6 +35,7 @@ Users can do the following, and navigate to those pages with a bottom tab bar:
 - [Video version 0.2 - download if on github](./demo/v02.mp4)
 - [Video version 0.3 - download if on github](./demo/v03.mp4)
 - [Video version 0.4 - download if on github](./demo/v04.mp4)
+- [Video version 0.5 - download if on github](./demo/v05.mp4).  Note: this is only for features added in v0.5. also look at v0.4.
 
 
 ## Upcoming features
