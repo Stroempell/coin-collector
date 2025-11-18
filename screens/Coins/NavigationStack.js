@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Countries from "./Countries";
-import Coins from "../Coins/Coins";
-import CoinInformation from "../Coins/CoinInformation";
+import Coins from "./Coins";
+import CoinInformation from "./CoinInformation";
 
 const Stack = createNativeStackNavigator();
 

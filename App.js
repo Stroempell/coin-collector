@@ -6,7 +6,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useEffect } from 'react';
 import { initializeDB } from './repository/CoinRepository';
-import NavigationStack from './screens/Countries/NavigationStack';
+import NavigationStack from './screens/Coins/NavigationStack';
+import CountryMap from './screens/Map/CountryMap';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +35,7 @@ export default function App() {
               iconName = 'home';
             } else if (route.name === 'Coins') {
               iconName = 'logo-euro';
-            } else if (route.name === 'Countries') {
+            } else if (route.name === 'Map') {
               iconName = 'earth-outline';
             }
 
@@ -43,7 +44,8 @@ export default function App() {
         })}
         >
           <Tab.Screen name="Home" component={HomePage}/>
-          <Tab.Screen name="Countries" component={NavigationStack}/>          
+          <Tab.Screen name="Coins" component={NavigationStack}/>
+          <Tab.Screen name="Map" component={CountryMap}/>
         </Tab.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
