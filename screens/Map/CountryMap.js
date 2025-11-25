@@ -7,11 +7,12 @@ import { useCallback, useState } from "react";
 import { CoinRepository } from "../../repository/CoinRepository";
 
 export default function CountryMap() {
-  const [countryPercentages, setCountryPercentages] = useState({});
+  const [countryPercentages, setCountryPercentages] = useState([]);
 
   const getData = async () => {
     const rows = await CoinRepository.getPercentageCountries();
     setCountryPercentages(rows);
+    console.log("Percentages = ", rows)
   };
 
   useFocusEffect(

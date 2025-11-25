@@ -8,6 +8,7 @@ import { useFocusEffect } from "@react-navigation/native";
 export default function Countries({ navigation }) {
   const [allCountries, setAllCountries] = useState([]);
   const [searchQuery, setSearchQuery] = useState();
+  const [refreshing, setRefreshing] = useState(false);
 
   const getData = async () => {
     const coinAmounts = await CoinRepository.getCoinAmount();
@@ -84,6 +85,18 @@ export default function Countries({ navigation }) {
 
       <FlatList
         data={allCountries}
+        onRefresh={() => {
+          try {
+            setRefreshing(true)
+            handleRefresh()
+          } catch (e) {
+            console.log("Error happened while trying to fetch countries: ", e)
+          }
+          finally {
+            setRefreshing(false)
+          }           
+        }}
+        refreshing={refreshing}
         renderItem={({ item }) => (
           <Pressable
             onPress={() => navigation.navigate("Coins", { country: item.name })}

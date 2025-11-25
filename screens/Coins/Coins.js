@@ -14,6 +14,7 @@ export default function Coins({ navigation, route }) {
   const [sorting, setSorting] = useState("ASC");
   const [allYears, setAllYears] = useState([]);
   const [selectedYears, setSelectedYears] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const getOwnedCoins = async () => {
     //  console.log("local coins are refreshing");
@@ -79,6 +80,7 @@ export default function Coins({ navigation, route }) {
     CoinRepository.checkDB();
     getOwnedCoins();
   };
+  
 
   return (
     <SafeAreaView style={[styles.container]} edges={["top"]}>
@@ -107,6 +109,17 @@ export default function Coins({ navigation, route }) {
 
       <FlatList
         data={allCoins}
+        onRefresh={() => {
+          try {
+            setRefreshing(true);
+            handleRefresh();
+          } catch (e) {
+            console.log("Error happened while trying to fetch countries: ", e);
+          } finally {
+            setRefreshing(false);
+          }
+        }}
+        refreshing={refreshing}
         ListHeaderComponent={
           <View style={styles.cellLayout}>
             {/* sorting part */}

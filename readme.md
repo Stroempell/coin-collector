@@ -10,11 +10,14 @@ Users can do the following, and navigate to those pages with a bottom tab bar:
 ### Countries screen
 - View all countries (incl. EU) and see how many coins you have per country.
   - Search for specific countries with the search bar (EU is always active)
+  - **Swipe down to refresh the page**
 - View coins from a specific country (or all, if clicked on EU)
   - See year, country, picture and amount per coin
   - Go back with the device back button, or with the header
   - Sort by year (high to low, low to high)
   - Filter by year (choose one or more years)
+  - **Swipe down to refresh the page**
+
 - Click on a coin to see more information. 
   - Edit the quality of your owned coin. (Is it in a bad state, exceptional,...). 
   - You can also add and remove how many coins of this type you own. 
