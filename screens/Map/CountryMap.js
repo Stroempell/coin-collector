@@ -12,7 +12,7 @@ export default function CountryMap() {
   const getData = async () => {
     const rows = await CoinRepository.getPercentageCountries();
     setCountryPercentages(rows);
-    console.log("Percentages = ", rows)
+    //  console.log("Percentages = ", rows)
   };
 
   useFocusEffect(

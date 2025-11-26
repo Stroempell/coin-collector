@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback, useState } from "react";
-import { View, StatusBar, StyleSheet } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { View, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CoinRepository } from "../repository/CoinRepository";
@@ -14,11 +14,11 @@ export default function HomePage() {
   const [topCountries, setTopCountries] = useState([]);
   const [bestPercentageCountry, setBestPercentageCountry] = useState({
     name: "Country1",
-    percentage: 0
+    percentage: 0,
   });
   const [worstPercentageCountry, setWorstPercentageCountry] = useState({
     name: "Country2",
-    percentage: 0
+    percentage: 0,
   });
 
   const getData = async () => {
@@ -78,6 +78,10 @@ export default function HomePage() {
       getData();
     }, [])
   );
+
+  useEffect(() => {
+    getData();
+  }, [])
 
   return (
     <SafeAreaView

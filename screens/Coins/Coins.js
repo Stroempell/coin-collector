@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { StyleSheet, FlatList, View, Image, Pressable } from "react-native";
+import { StyleSheet, FlatList, View, Pressable } from "react-native";
 import { Text, Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CoinRepository, initializeDB } from "../../repository/CoinRepository";
 import { useFocusEffect } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { MultiSelect } from "react-native-element-dropdown";
+import { Image } from "expo-image";
 
 export default function Coins({ navigation, route }) {
   const country = route.params?.country;
@@ -80,7 +81,6 @@ export default function Coins({ navigation, route }) {
     CoinRepository.checkDB();
     getOwnedCoins();
   };
-  
 
   return (
     <SafeAreaView style={[styles.container]} edges={["top"]}>
@@ -114,7 +114,10 @@ export default function Coins({ navigation, route }) {
             setRefreshing(true);
             handleRefresh();
           } catch (e) {
-            console.log("Error happened while trying to fetch countries: ", e);
+            console.error(
+              "Error happened while trying to fetch countries: ",
+              e
+            );
           } finally {
             setRefreshing(false);
           }
@@ -140,8 +143,16 @@ export default function Coins({ navigation, route }) {
                   }}
                   onValueChange={(value) => setSorting(value)}
                 >
-                  <Picker.Item label="Old to new" value="ASC" />
-                  <Picker.Item label="New to old" value="DESC" />
+                  <Picker.Item
+                    label="Old to new"
+                    value="ASC"
+                    style={{ color: "#000" }}
+                  />
+                  <Picker.Item
+                    label="New to old"
+                    value="DESC"
+                    style={{ color: "#000" }}
+                  />
                 </Picker>
               </View>
             </View>
@@ -188,8 +199,9 @@ export default function Coins({ navigation, route }) {
             </View>
             <Image
               source={{ uri: item.url }}
-              resizeMode="contain"
+              contentFit="contain"
               style={item.amount === 0 ? styles.lockedImage : styles.image}
+              cachePolicy={"disk"}
             />
 
             <Text variant="bodyMedium">Amount: {item.amount}</Text>

@@ -2,10 +2,11 @@ import { Svg, Path, Circle } from "react-native-svg";
 
 export default function EuropeMap({ countryPercentages = [] }) {
   const getColor = (percentage) => {
-    console.log("Percentage: ", percentage);
+    //    console.log("Percentage: ", percentage);
     if (percentage === undefined || percentage === null) {
       return "#D3D3D3"; // light gray for no data / non-euro users
     }
+    if (percentage == 0) return "#FFF";
     if (percentage <= 0.1) return "#E3F2FD";
     if (percentage <= 0.2) return "#BBDEFB";
     if (percentage <= 0.3) return "#90CAF9";
@@ -25,7 +26,7 @@ export default function EuropeMap({ countryPercentages = [] }) {
     return getColor(country?.percentage) || "#FFFFFF";
   };
 
-  console.log("Percentages: ", countryPercentages)
+  //  console.log("Percentages: ", countryPercentages)
 
   return (
     <Svg

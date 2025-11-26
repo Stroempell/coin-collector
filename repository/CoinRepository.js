@@ -35,7 +35,7 @@ export const initializeDB = async () => {
       )
     `);
 
-    console.log("database initialized");
+    //  console.log("database initialized");
   } catch (error) {
     console.error("Could not open database: ", error);
   }
@@ -48,7 +48,7 @@ export const CoinRepository = {
   */
 
   resetDB: async () => {
-    console.log("deleting from db");
+    // console.log("deleting from db");
     await db.execAsync("DELETE FROM coins");
     await db.execAsync("DELETE FROM countries");
 
@@ -96,7 +96,7 @@ export const CoinRepository = {
     try {
       // fetch countries first
       const countryResponse = await fetch(
-        "http://192.168.101.104:8080/api/countries"
+        "https://thebelgianeagles.be/coins/api/countries"
       );
       if (!countryResponse.ok) throw new Error("Failed to fetch countries");
       const countries = await countryResponse.json();
@@ -119,10 +119,12 @@ export const CoinRepository = {
 
       await countryStmt.finalizeAsync();
       await db.execAsync("COMMIT");
-      console.log("All countries inserted");
+      //   console.log("All countries inserted");
 
       // fetch coins when countries are loaded
-      const coinResponse = await fetch("http://192.168.101.104:8080/api/coins");
+      const coinResponse = await fetch(
+        "https://thebelgianeagles.be/coins/api/coins"
+      );
       if (!coinResponse.ok) throw new Error("Failed to fetch coins");
       const coins = await coinResponse.json();
 
@@ -160,7 +162,7 @@ export const CoinRepository = {
 
       await coinStmt.finalizeAsync();
       await db.execAsync("COMMIT"); // necessary because otherwise big problems
-      console.log("All coins inserted in single transaction");
+      //     console.log("All coins inserted in single transaction");
     } catch (err) {
       await db.execAsync("ROLLBACK");
       console.error("Insert failed:", err);
@@ -198,7 +200,7 @@ export const CoinRepository = {
   },
 
   updateCoin: async (coin) => {
-    console.log("Updating coin to following vars: ", coin);
+    //  console.log("Updating coin to following vars: ", coin);
     const statement = await db.prepareAsync(
       "UPDATE coins SET condition=$condition, amount=$amount, url=$url WHERE id=$id"
     );
@@ -226,7 +228,7 @@ export const CoinRepository = {
     } finally {
       await statement.finalizeAsync();
     }
-    console.log("url should be reset");
+    //  console.log("url should be reset");
   },
 
   getAllCountries: async (searchQuery) => {

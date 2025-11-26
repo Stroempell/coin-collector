@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   Alert,
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -19,6 +18,7 @@ import {
   requestCameraPermissionsAsync,
   requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
+import { Image } from "expo-image";
 
 export default function CoinInformation({ navigation, route }) {
   const existingCoin = route.params?.coin;
@@ -162,12 +162,13 @@ export default function CoinInformation({ navigation, route }) {
           >
             <Image
               source={{ uri: newCoin.url }}
-              resizeMode="cover"
+              contentFit="contain"
               style={[
                 styles.image,
                 styles.contentCenter,
                 bigger && styles.imagePressed,
               ]}
+              cachePolicy={"disk"}
             />
             {!bigger && (
               <Ionicons

@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { StyleSheet, FlatList, View, Image, Pressable } from "react-native";
+import { StyleSheet, FlatList, View, Pressable } from "react-native";
 import { Text, Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CoinRepository } from "../../repository/CoinRepository";
 import { useFocusEffect } from "@react-navigation/native";
+import { Image } from "expo-image";
 
 export default function Countries({ navigation }) {
   const [allCountries, setAllCountries] = useState([]);
@@ -21,7 +22,7 @@ export default function Countries({ navigation }) {
       ownedCoins = coinAmounts[0].allOwnedCoins;
       maxCoins = coinAmounts[0].allMaxCoins;
     }
-    console.log("countries are refreshing");
+    //    console.log("countries are refreshing");
 
     if (countries) {
       setAllCountries([
@@ -87,14 +88,16 @@ export default function Countries({ navigation }) {
         data={allCountries}
         onRefresh={() => {
           try {
-            setRefreshing(true)
-            handleRefresh()
+            setRefreshing(true);
+            handleRefresh();
           } catch (e) {
-            console.log("Error happened while trying to fetch countries: ", e)
+            console.error(
+              "Error happened while trying to fetch countries: ",
+              e
+            );
+          } finally {
+            setRefreshing(false);
           }
-          finally {
-            setRefreshing(false)
-          }           
         }}
         refreshing={refreshing}
         renderItem={({ item }) => (
@@ -109,8 +112,9 @@ export default function Countries({ navigation }) {
             </View>
             <Image
               source={{ uri: item.url }}
-              resizeMode="stretch"
+              contentFit="fill"
               style={item.owned_coins === 0 ? styles.lockedImage : styles.image}
+              cachePolicy={"disk"}
             />
           </Pressable>
         )}
